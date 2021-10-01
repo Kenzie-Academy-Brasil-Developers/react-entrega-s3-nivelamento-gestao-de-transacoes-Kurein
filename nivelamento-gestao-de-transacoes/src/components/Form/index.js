@@ -21,8 +21,6 @@ function Form({
     obj.price = Number(obj.price);
     obj.quantity = Number(obj.quantity);
 
-    console.log(obj);
-
     const pluralHandler = () => {
       if (obj.quantity === 1) {
         return "unidade";
