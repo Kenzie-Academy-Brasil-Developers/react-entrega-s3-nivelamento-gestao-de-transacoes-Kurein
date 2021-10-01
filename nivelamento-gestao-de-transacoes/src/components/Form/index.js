@@ -22,7 +22,7 @@ function Form({
     obj.quantity = Number(obj.quantity);
 
     const pluralHandler = () => {
-      if (obj.quantity === 1) {
+      if (obj.quantity === 1 || obj.quantity * -1 === 1) {
         return "unidade";
       } else {
         return "unidades";
