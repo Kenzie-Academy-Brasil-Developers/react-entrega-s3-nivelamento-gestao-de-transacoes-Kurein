@@ -17,15 +17,14 @@ function App() {
 
   return (
     <div className="App">
+      <Form
+        setTransactions={setTransactions}
+        transactions={transactions}
+        setHistory={setHistory}
+        history={history}
+      />
       <div className="mainDiv">
         <div className="mainDiv__listArea">
-          <Form
-            setTransactions={setTransactions}
-            transactions={transactions}
-            setHistory={setHistory}
-            history={history}
-            listHandler={listHandler}
-          />
           <List transactions={transactions} listHandler={listHandler} />
           <button onClick={handleOnClick}>
             {listHandler ? "Ir para as Entradas" : "Ir para as Saídas"}

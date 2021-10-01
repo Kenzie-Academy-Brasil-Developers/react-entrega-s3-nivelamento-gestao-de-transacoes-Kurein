@@ -1,6 +1,4 @@
-import * as yup from "yup";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { useState } from "react";
 import "./styles.css";
 
 function Form({
@@ -10,42 +8,64 @@ function Form({
   history,
   listHandler,
 }) {
-  const Schema = yup.object().shape({
-    name: yup.string().required("Campo Obrigatório"),
-    quantity: yup.number().typeError("Inserir apenas Números"),
-    price: yup.number().typeError("Inserir apenas Números"),
-  });
+  const [name, setName] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [price, setPrice] = useState("");
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(Schema),
-  });
+  function onSubmitFunction(e) {
+    e.preventDefault();
 
-  function onSubmitFunction(data) {
-    if (!listHandler) {
-      setTransactions([...transactions, data]);
-      setHistory([...history, `Adicionou ${data.quantity} ${data.name}s`]);
+    setPrice(Number(price));
+
+    const obj = { name, quantity, price };
+    obj.price = Number(obj.price);
+    obj.quantity = Number(obj.quantity);
+
+    console.log(obj);
+
+    const pluralHandler = () => {
+      if (obj.quantity === 1) {
+        return "unidade";
+      } else {
+        return "unidades";
+      }
+    };
+
+    if (obj.quantity > 0) {
+      setTransactions([...transactions, obj]);
+      setHistory([
+        ...history,
+        `Adicionou ${obj.quantity} ${pluralHandler()} de ${obj.name}`,
+      ]);
     }
-    if (listHandler) {
-      data.quantity *= -1;
-      setTransactions([...transactions, data]);
-      setHistory([...history, `Retirou ${data.quantity * -1} ${data.name}s`]);
+    if (obj.quantity < 0) {
+      setTransactions([...transactions, obj]);
+      setHistory([
+        ...history,
+        `Retirou ${obj.quantity * -1} ${pluralHandler()} de ${obj.name}`,
+      ]);
     }
   }
 
   return (
     <div>
-      <form onSubmit={handleSubmit(onSubmitFunction)}>
-        <input placeholder="Nome" {...register("name")} />
-        {errors.name?.message}
-        <input placeholder="Quantidade" {...register("quantity")} />
-        {errors.quantity?.message}
-        <input placeholder="Preço" {...register("price")} />
-        {errors.price?.message}
-        <button type="submit">{listHandler ? "Retirar" : "Adicionar"}</button>
+      <form onSubmit={onSubmitFunction}>
+        <input
+          placeholder="Nome"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <input
+          placeholder="Quantidade"
+          value={quantity}
+          onChange={(e) => setQuantity(e.target.value)}
+        />
+        <input
+          placeholder="Preço"
+          value={price}
+          onChange={(e) => setPrice(e.target.value)}
+        />
+        <button type="submit">Listar</button>
       </form>
     </div>
   );
